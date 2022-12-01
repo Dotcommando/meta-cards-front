@@ -1,0 +1,35 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "array-bracket-spacing": [ "error", "always" ],
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          ["^\\u0000"],
+          ["^next"],
+          ["^react"],
+          ["^rxjs"],
+          ["^\\w+"],
+          ["^@\\w+"],
+          ["^\\.{1}"],
+          ["^\\.{2}"],
+          ["^"]
+        ]
+      }
+    ],
+    "simple-import-sort/exports": "error",
+    "indent": [
+      "error", 2, {
+        "SwitchCase": 1,
+        "ignoredNodes": [
+          "FunctionExpression > .params[decorators.length > 0]",
+          "FunctionExpression > .params > :matches(Decorator, :not(:first-child))",
+          "ClassBody.body > PropertyDefinition[decorators.length > 0] > .key"
+        ]
+      }
+    ],
+    "semi": [ "error", "always" ]
+  },
+  "plugins": ["react", "react-hooks", "simple-import-sort"]
+}
