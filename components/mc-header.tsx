@@ -3,10 +3,19 @@ import { useDispatch } from 'react-redux';
 import { AnyAction } from 'redux';
 import styled from 'styled-components';
 
-import { signInReq, signUpReq } from '../../store';
-import { IAuthDataProps } from '../../types';
+import { signInReq, signUpReq } from '../store';
 
-const Header: React.FC<{ auth: IAuthDataProps }> = (props: { auth: IAuthDataProps }) => {
+export interface IHeaderProps {
+  userId: string | null;
+  accessTokenExpiredAfter: number;
+  refreshTokenExpiredAfter: number;
+  accessToken: string;
+  refreshToken: string;
+  isAuthenticated: boolean;
+  isAdmin: boolean;
+}
+
+const Header: React.FC<{ auth: IHeaderProps }> = (props: { auth: IHeaderProps }) => {
   const dispatch = useDispatch();
   const handleSignIn = () => {
     dispatch(signInReq({ email: 'v.zaytsev@gmail.com', password: '125xdcw0' }) as unknown as AnyAction);

@@ -1,10 +1,10 @@
-import indigo from '@material-ui/core/colors/indigo';
-import pink from '@material-ui/core/colors/pink';
-import { createTheme } from '@material-ui/core/styles';
+import violet from '@mui/styles';
+import pink from '@mui/styles';
+import { createTheme } from '@mui/system';
 
 const theme = createTheme({
   palette: {
-    primary: indigo,
+    primary: violet,
     secondary: pink,
   },
 });

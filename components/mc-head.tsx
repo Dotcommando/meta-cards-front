@@ -1,7 +1,10 @@
 import Head from 'next/head';
 
-import { IPageHeadProps } from '../types';
-
+export interface IPageHeadProps {
+  title: string;
+  description?: string;
+  keywords?: string;
+}
 const MCHead: React.FC<IPageHeadProps> = (props: IPageHeadProps) => {
   return (
     <Head>
