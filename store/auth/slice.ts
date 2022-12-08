@@ -1,9 +1,6 @@
-import { HYDRATE } from 'next-redux-wrapper';
-
 import { NoInfer } from 'react-redux';
 
 import {
-  Action,
   ActionReducerMapBuilder,
   createSlice,
   Draft,
@@ -54,11 +51,6 @@ const authSlice: Slice<IAuthState, SliceCaseReducers<IAuthState>> = createSlice(
   },
   extraReducers: (builder: ActionReducerMapBuilder<NoInfer<IAuthState>>) => {
     builder
-      .addCase(HYDRATE, (state: Draft<IAuthState>, action: Action<any>) => ({
-        ...state,
-        // @ts-ignore
-        ...action.payload.auth,
-      }))
       .addCase(String(signUpReq.pending), (state: Draft<IAuthState>) => ({
         ...state,
         signUpUserIsLoading: true,

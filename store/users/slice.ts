@@ -1,9 +1,6 @@
-import { HYDRATE } from 'next-redux-wrapper';
-
 import { NoInfer } from 'react-redux';
 
 import {
-  Action,
   ActionReducerMapBuilder,
   createEntityAdapter,
   createSlice,
@@ -35,11 +32,6 @@ const usersSlice: Slice<EntityState<IUser>, SliceCaseReducers<EntityState<IUser>
   },
   extraReducers: (builder: ActionReducerMapBuilder<NoInfer<EntityState<IUser>>>) => {
     builder
-      .addCase(HYDRATE, (state: Draft<UsersState>, action: Action<any>) => ({
-        ...state,
-        // @ts-ignore
-        ...action.payload.auth,
-      }))
       .addCase(String(signUpReq.fulfilled), (state: Draft<UsersState>, action: PayloadAction<IUserSignInRes>) => {
         const { user } = action.payload;
 
