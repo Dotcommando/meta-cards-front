@@ -15,7 +15,13 @@ export interface IHeaderProps {
   isAdmin: boolean;
 }
 
-const Header: React.FC<{ auth: IHeaderProps }> = (props: { auth: IHeaderProps }) => {
+const Header = styled.header`
+  min-width: 100%;
+  min-height: 90px;
+  background: royalblue;
+`;
+
+const MCHeader: React.FC<{ auth: IHeaderProps }> = (props: { auth: IHeaderProps }) => {
   const dispatch = useDispatch();
   const handleSignIn = () => {
     dispatch(signInReq({ email: 'v.zaytsev@gmail.com', password: '125xdcw0' }) as unknown as AnyAction);
@@ -25,20 +31,14 @@ const Header: React.FC<{ auth: IHeaderProps }> = (props: { auth: IHeaderProps })
   };
 
   return (
-    <header>
+    <Header>
       <button onClick={handleSignIn}>Sign in</button>
       <button onClick={handleSignUp}>Sign up</button>
       <div>{props.auth.userId ? props.auth.userId : null}</div>
       <div>{props.auth.isAdmin ? 'Admin' : 'User'}</div>
       <div>{props.auth.isAuthenticated ? 'Authenticated' : 'Not authenticated'}</div>
-    </header>
+    </Header>
   );
 };
-
-const MCHeader = styled(Header)`
-  width: 100%;
-  min-height: 50px;
-  background: royalblue;
-`;
 
 export default MCHeader;
