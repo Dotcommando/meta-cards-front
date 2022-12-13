@@ -5,13 +5,20 @@ import storage from 'redux-persist/lib/storage';
 import thunkMiddleware from 'redux-thunk';
 
 import { configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
 
+import { api } from './api';
 import authReducer from './auth/slice';
 import usersReducer from './users/slice';
 
-const rootReducer = combineReducers({ auth: authReducer, users: usersReducer });
+const rootReducer = combineReducers({
+  auth: authReducer,
+  users: usersReducer,
+  [api.reducerPath]: api.reducer,
+});
 const persistConfig = {
   key: 'root',
+  blacklist: [ api.reducerPath ],
   storage,
 };
 
@@ -23,7 +30,10 @@ export const store = configureStore({
     serializableCheck: {
       ignoredActions: [ FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE ],
     },
-  }).concat(thunkMiddleware),
+  })
+    .concat([ thunkMiddleware, api.middleware ]),
 });
+
+setupListeners(store.dispatch);
 
 export const persistor = persistStore(store);

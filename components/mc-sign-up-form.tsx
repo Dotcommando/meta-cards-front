@@ -1,13 +1,13 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
+
+import React, { useEffect } from 'react';
 
 import { useFormik } from 'formik';
-import { AnyAction } from 'redux';
 import * as yup from 'yup';
 
 import { Button, FormControl, Grid, TextField } from '@mui/material';
 
-import { signUpReq } from '../store';
+import { useSignUpMutation } from '../store/auth/api';
 
 interface ISignUpFormFields {
   firstName: string;
@@ -18,14 +18,24 @@ interface ISignUpFormFields {
 }
 
 const MCSignUpForm = () => {
-  const dispatch = useDispatch();
+  const [ signUp, { isLoading, isSuccess } ] = useSignUpMutation();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push('/profile');
+    }
+  }, [ router, isSuccess ]);
+
   const handleSignUp = (values: ISignUpFormFields) => {
-    dispatch(signUpReq({
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-      password: values.password,
-    }) as unknown as AnyAction);
+    signUp({
+      body: {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        password: values.password,
+      },
+    });
   };
   const validationSchema = yup.object({
     firstName: yup
@@ -139,7 +149,12 @@ const MCSignUpForm = () => {
               onChange={formik.handleChange}
               error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
               onBlur={formik.handleBlur}
-              helperText={ formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword) ? formik.errors.confirmPassword : '' }
+              disabled={isLoading}
+              helperText={
+                formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)
+                  ? formik.errors.confirmPassword
+                  : ''
+              }
             />
           </FormControl>
         </Grid>

@@ -1,9 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { API_BODY_INIT, getApiUrl, SIGN_IN, SIGN_UP } from '../../common/constants';
+import { API_BODY_INIT } from '../../common/constants';
+import { getApiUrl, LOGOUT, SIGN_IN, SIGN_UP } from '../../common/constants/api-urls.constant';
 import { statusIsNotOk } from '../../common/helpers';
 import { IResponse } from '../../common/types';
-import { IUserSignInRes, IUserSignUpReq } from '../../types';
+import { ILogoutReq, ILogoutRes, IUserSignInRes, IUserSignUpReq } from '../../types';
 
 export const signInReq = createAsyncThunk<
   IUserSignInRes,
@@ -40,6 +41,30 @@ export const signUpReq = createAsyncThunk<
     { rejectWithValue },
   ): Promise<IUserSignInRes | ReturnType<typeof rejectWithValue>> => {
     const response: Response = await fetch(getApiUrl(SIGN_UP), API_BODY_INIT[SIGN_UP](body));
+    const responseBody: IResponse<IUserSignInRes> = await response.json();
+
+    if (!responseBody || statusIsNotOk(responseBody.status)) {
+      return rejectWithValue({
+        message: responseBody.errors?.[0] ?? 'Sign up request rejected',
+      });
+    }
+
+    // @ts-ignore
+    return responseBody.data;
+  }
+);
+
+export const logoutReq = createAsyncThunk<
+  ILogoutRes,
+  ILogoutReq,
+  { rejectValue: { message: string } }
+>(
+  LOGOUT,
+  async (
+    body: ILogoutReq,
+    { rejectWithValue },
+  ): Promise<IUserSignInRes | ReturnType<typeof rejectWithValue>> => {
+    const response: Response = await fetch(getApiUrl(LOGOUT), API_BODY_INIT[LOGOUT](body));
     const responseBody: IResponse<IUserSignInRes> = await response.json();
 
     if (!responseBody || statusIsNotOk(responseBody.status)) {

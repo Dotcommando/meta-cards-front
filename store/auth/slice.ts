@@ -3,16 +3,17 @@ import { NoInfer } from 'react-redux';
 import {
   ActionReducerMapBuilder,
   createSlice,
-  Draft,
+  Draft, isFulfilled,
   PayloadAction,
   Slice,
   SliceCaseReducers,
 } from '@reduxjs/toolkit';
 
+import { authApi } from './api';
 import { initialState } from './initial-state';
 import { signInReq, signUpReq } from './side-effects';
 
-import { ROLE } from '../../common/constants';
+import { ROLE, SIGN_UP } from '../../common/constants';
 import { AUTH_SIGNIN_RESET, AUTH_SIGNUP_RESET } from '../../constants';
 import { IAuthState, IUserSignInRes } from '../../types';
 
@@ -51,53 +52,53 @@ const authSlice: Slice<IAuthState, SliceCaseReducers<IAuthState>> = createSlice(
   },
   extraReducers: (builder: ActionReducerMapBuilder<NoInfer<IAuthState>>) => {
     builder
-      .addCase(String(signUpReq.pending), (state: Draft<IAuthState>) => ({
-        ...state,
-        signUpUserIsLoading: true,
-        signUpUserIsSuccess: false,
-        signUpUserIsError: false,
-        signUpUserMessage: 'PENDING',
-        isAuthenticated: false,
-        isAdmin: false,
-        userId: null,
-        accessToken: '',
-        refreshToken: '',
-        accessTokenExpiredAfter: 0,
-        refreshTokenExpiredAfter: 0,
-      }))
-      .addCase(String(signUpReq.fulfilled), (state: Draft<IAuthState>, action: PayloadAction<IUserSignInRes>) => {
-        const { user, accessToken, refreshToken, accessTokenExpiredAfter, refreshTokenExpiredAfter } = action.payload;
-
-        return {
-          ...state,
-          signUpUserIsLoading: false,
-          signUpUserIsSuccess: false,
-          signUpUserIsError: false,
-          signUpUserMessage: '',
-          isAuthenticated: true,
-          isAdmin: user.role === ROLE.ADMIN,
-          userId: user._id,
-          accessToken,
-          refreshToken,
-          accessTokenExpiredAfter,
-          refreshTokenExpiredAfter,
-        };
-      })
-      .addCase(String(signUpReq.rejected), (state: Draft<IAuthState>, action: PayloadAction<any>) => ({
-        ...state,
-        signUpUserIsLoading: false,
-        signUpUserIsSuccess: false,
-        signUpUserIsError: true,
-        // @ts-ignore
-        signUpUserMessage: action?.payload?.message ?? action?.error?.message ?? 'Cannot fetch data',
-        isAuthenticated: false,
-        isAdmin: false,
-        userId: null,
-        accessToken: '',
-        refreshToken: '',
-        accessTokenExpiredAfter: 0,
-        refreshTokenExpiredAfter: 0,
-      }))
+      // .addCase(isFulfilled(authApi.endpoints[SIGN_UP]), (state: Draft<IAuthState>) => ({
+      //   ...state,
+      //   signUpUserIsLoading: true,
+      //   signUpUserIsSuccess: false,
+      //   signUpUserIsError: false,
+      //   signUpUserMessage: 'PENDING',
+      //   isAuthenticated: false,
+      //   isAdmin: false,
+      //   userId: null,
+      //   accessToken: '',
+      //   refreshToken: '',
+      //   accessTokenExpiredAfter: 0,
+      //   refreshTokenExpiredAfter: 0,
+      // }))
+      // .addCase(String(authApi.endpoints[SIGN_UP].matchFulfilled), (state: Draft<IAuthState>, action: PayloadAction<IUserSignInRes>) => {
+      //   const { user, accessToken, refreshToken, accessTokenExpiredAfter, refreshTokenExpiredAfter } = action.payload;
+      //
+      //   return {
+      //     ...state,
+      //     signUpUserIsLoading: false,
+      //     signUpUserIsSuccess: false,
+      //     signUpUserIsError: false,
+      //     signUpUserMessage: '',
+      //     isAuthenticated: true,
+      //     isAdmin: user.role === ROLE.ADMIN,
+      //     userId: user._id,
+      //     accessToken,
+      //     refreshToken,
+      //     accessTokenExpiredAfter,
+      //     refreshTokenExpiredAfter,
+      //   };
+      // })
+      // .addCase(String(authApi.endpoints[SIGN_UP].matchRejected), (state: Draft<IAuthState>, action: PayloadAction<any>) => ({
+      //   ...state,
+      //   signUpUserIsLoading: false,
+      //   signUpUserIsSuccess: false,
+      //   signUpUserIsError: true,
+      //   // @ts-ignore
+      //   signUpUserMessage: action?.payload?.message ?? action?.error?.message ?? 'Cannot fetch data',
+      //   isAuthenticated: false,
+      //   isAdmin: false,
+      //   userId: null,
+      //   accessToken: '',
+      //   refreshToken: '',
+      //   accessTokenExpiredAfter: 0,
+      //   refreshTokenExpiredAfter: 0,
+      // }))
       .addCase(String(signInReq.pending), (state: Draft<IAuthState>) => ({
         ...state,
         signInUserIsLoading: true,
